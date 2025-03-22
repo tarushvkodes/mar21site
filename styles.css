@@ -424,7 +424,7 @@ header.category-header {
 /* Category Grid for Homepage */
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 30px;
     margin: 40px 0;
 }
@@ -1000,6 +1000,10 @@ footer {
     .article h2 {
         font-size: 2rem;
     }
+
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 768px) {
@@ -1085,6 +1089,10 @@ footer {
     .article-meta {
         flex-direction: column;
         gap: 5px;
+    }
+
+    .category-grid {
+        grid-template-columns: 1fr;
     }
 }
 
