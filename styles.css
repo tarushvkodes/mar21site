@@ -126,12 +126,18 @@ header {
     width: 90%;
     max-width: 1200px;
     z-index: 100;
+    background: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    border-radius: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-container.scrolled {
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-radius: 16px;
-    box-shadow: var(--shadow-soft);
-    transition: var(--transition-standard);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 nav {
@@ -146,6 +152,13 @@ nav {
     font-weight: 600;
     font-size: 1.5rem;
     letter-spacing: -0.5px;
+    color: var(--gray-800);
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+}
+
+.nav-container.scrolled .logo {
+    opacity: 1;
 }
 
 .nav-links {
@@ -159,24 +172,12 @@ nav {
     letter-spacing: -0.3px;
     padding: 5px 0;
     color: var(--gray-800);
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
 }
 
-.nav-links a:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 2px;
-    background-color: var(--accent-color);
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.3s ease;
-}
-
-.nav-links a:hover:after {
-    transform: scaleX(1);
-    transform-origin: left;
+.nav-container.scrolled .nav-links a {
+    opacity: 1;
 }
 
 /* Smaller header for category pages */

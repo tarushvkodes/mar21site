@@ -49,13 +49,13 @@ function initScrollAnimations() {
     const revealElements = document.querySelectorAll('.reveal');
     
     const handleScroll = () => {
-        // Update navigation appearance
-        if (window.scrollY > 50) {
-            navContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
-            navContainer.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)';
+        const scrollY = window.scrollY;
+        
+        // Update navigation appearance with a threshold
+        if (scrollY > 20) {
+            navContainer.classList.add('scrolled');
         } else {
-            navContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
-            navContainer.style.boxShadow = 'none';
+            navContainer.classList.remove('scrolled');
         }
         
         // Reveal elements on scroll
