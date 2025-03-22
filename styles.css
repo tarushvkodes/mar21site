@@ -426,7 +426,10 @@ header.category-header {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 30px;
-    margin: 40px 0;
+    margin: 40px auto;
+    max-width: 1200px;
+    justify-content: center;
+    align-items: center;
 }
 
 .category-card {
