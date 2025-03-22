@@ -84,19 +84,15 @@ function initScrollAnimations() {
 // Navbar transformation on scroll
 function initNavbarTransform() {
     const navbar = document.querySelector('.nav-container');
-    const navBackground = document.querySelector('.nav-background');
     let lastScroll = 0;
     let ticking = false;
     
     function updateNavbar(scrollPos) {
-        if (scrollPos > 100) {
+        // Add scrolled class when scrolling down
+        if (scrollPos > 5) {
             navbar.classList.add('scrolled');
-            // Calculate background opacity based on scroll position
-            const opacity = Math.min((scrollPos - 100) / 100, 0.95);
-            navBackground.style.opacity = opacity;
         } else {
             navbar.classList.remove('scrolled');
-            navBackground.style.opacity = 0;
         }
         
         // Hide/show navbar based on scroll direction
