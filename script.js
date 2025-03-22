@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize all animations and interactions
     initCursorGlow();
     initScrollAnimations();
-    initNavbarScroll();
+    initNavbarTransform();
     
     // Add a small delay before starting initial animations
     setTimeout(() => {
@@ -17,19 +17,25 @@ document.addEventListener('DOMContentLoaded', () => {
 // Custom cursor glow effect
 function initCursorGlow() {
     const cursor = document.querySelector('.cursor-glow');
-    
+    let timeout;
+
     document.addEventListener('mousemove', (e) => {
         cursor.style.opacity = '1';
         cursor.style.left = `${e.clientX}px`;
         cursor.style.top = `${e.clientY}px`;
+
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            cursor.style.opacity = '0';
+        }, 2000);
     });
-    
+
     document.addEventListener('mouseout', () => {
         cursor.style.opacity = '0';
     });
-    
+
     // Add extra glow on interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, .highlight-card, .tech-item, .culture-item');
+    const interactiveElements = document.querySelectorAll('a, button, .highlight-card, .tech-item, .culture-item, .article-card');
     
     interactiveElements.forEach(element => {
         element.addEventListener('mouseenter', () => {
@@ -46,41 +52,71 @@ function initCursorGlow() {
 
 // Scroll-triggered animations
 function initScrollAnimations() {
-    // Select all elements with the 'reveal' class
     const revealElements = document.querySelectorAll('.reveal');
+    const windowHeight = window.innerHeight;
+    let scrollTimeout;
     
-    const revealOnScroll = () => {
-        const windowHeight = window.innerHeight;
-        const revealPoint = 150;
-        
+    function checkReveal() {
         revealElements.forEach(element => {
             const elementTop = element.getBoundingClientRect().top;
+            const elementVisible = 150;
             
-            if (elementTop < windowHeight - revealPoint) {
+            if (elementTop < windowHeight - elementVisible) {
                 element.classList.add('active');
-            } else {
-                element.classList.remove('active');
             }
         });
-    };
+    }
     
-    // Initial check for elements in view on page load
-    revealOnScroll();
+    // Initial check
+    checkReveal();
     
-    // Add scroll event listener
-    window.addEventListener('scroll', revealOnScroll);
+    // Throttled scroll handler
+    window.addEventListener('scroll', () => {
+        if (!scrollTimeout) {
+            scrollTimeout = setTimeout(() => {
+                checkReveal();
+                scrollTimeout = null;
+            }, 100);
+        }
+    });
 }
 
 // Navbar transformation on scroll
-function initNavbarScroll() {
-    const body = document.body;
-    const scrollThreshold = 100;
+function initNavbarTransform() {
+    const navbar = document.querySelector('.nav-container');
+    const navBackground = document.querySelector('.nav-background');
+    let lastScroll = 0;
+    let ticking = false;
+    
+    function updateNavbar(scrollPos) {
+        if (scrollPos > 100) {
+            navbar.classList.add('scrolled');
+            // Calculate background opacity based on scroll position
+            const opacity = Math.min((scrollPos - 100) / 100, 0.95);
+            navBackground.style.opacity = opacity;
+        } else {
+            navbar.classList.remove('scrolled');
+            navBackground.style.opacity = 0;
+        }
+        
+        // Hide/show navbar based on scroll direction
+        if (scrollPos > lastScroll && scrollPos > 300) {
+            navbar.style.transform = 'translateY(-100%)';
+        } else {
+            navbar.style.transform = 'translateY(0)';
+        }
+        
+        lastScroll = scrollPos;
+        ticking = false;
+    }
     
     window.addEventListener('scroll', () => {
-        if (window.scrollY > scrollThreshold) {
-            body.classList.add('scrolled');
-        } else {
-            body.classList.remove('scrolled');
+        const scrollPos = window.scrollY;
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                updateNavbar(scrollPos);
+            });
+            ticking = true;
         }
     });
 }
@@ -89,13 +125,15 @@ function initNavbarScroll() {
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
-        
         const targetId = this.getAttribute('href');
         const targetElement = document.querySelector(targetId);
         
         if (targetElement) {
+            const navbarHeight = document.querySelector('.nav-container').offsetHeight;
+            const targetPosition = targetElement.offsetTop - navbarHeight;
+            
             window.scrollTo({
-                top: targetElement.offsetTop - 100,
+                top: targetPosition,
                 behavior: 'smooth'
             });
         }
