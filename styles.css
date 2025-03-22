@@ -131,32 +131,30 @@ header {
     -webkit-backdrop-filter: blur(0px);
     border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.nav-container.scrolled {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: var(--shadow-soft);
+    display: flex;
+    align-items: center;
+    height: 32px;
 }
 
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 12px;
     width: 100%;
-    height: 28px;
+    padding: 0 12px;
+    height: 100%;
 }
 
 .logo {
+    display: flex;
+    align-items: center;
     font-weight: 600;
     font-size: 1.1rem;
     letter-spacing: -0.5px;
     color: var(--gray-800);
     opacity: 0.85;
     transition: opacity 0.3s ease;
-    line-height: 1;
+    height: 100%;
 }
 
 .nav-links {
@@ -167,6 +165,9 @@ nav {
 }
 
 .nav-links a {
+    display: flex;
+    align-items: center;
+    height: 100%;
     position: relative;
     font-weight: 500;
     font-size: 0.9rem;
@@ -174,8 +175,6 @@ nav {
     color: var(--gray-800);
     opacity: 0.85;
     transition: opacity 0.3s ease;
-    line-height: 1;
-    padding: 0;
 }
 
 /* Smaller header for category pages */
