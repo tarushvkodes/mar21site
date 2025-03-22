@@ -1,9 +1,8 @@
 // Main JavaScript for March 21, 2025 website
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize all animations and interactions
     initCursorGlow();
     initScrollAnimations();
-    initNavbarTransform();
+    initSmoothScroll();
     
     // Add a small delay before starting initial animations
     setTimeout(() => {
@@ -17,25 +16,19 @@ document.addEventListener('DOMContentLoaded', () => {
 // Custom cursor glow effect
 function initCursorGlow() {
     const cursor = document.querySelector('.cursor-glow');
-    let timeout;
-
+    
     document.addEventListener('mousemove', (e) => {
         cursor.style.opacity = '1';
         cursor.style.left = `${e.clientX}px`;
         cursor.style.top = `${e.clientY}px`;
-
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            cursor.style.opacity = '0';
-        }, 2000);
     });
-
+    
     document.addEventListener('mouseout', () => {
         cursor.style.opacity = '0';
     });
-
+    
     // Add extra glow on interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, .highlight-card, .tech-item, .culture-item, .article-card');
+    const interactiveElements = document.querySelectorAll('a, button, .highlight-card, .tech-item, .culture-item');
     
     interactiveElements.forEach(element => {
         element.addEventListener('mouseenter', () => {
@@ -52,89 +45,55 @@ function initCursorGlow() {
 
 // Scroll-triggered animations
 function initScrollAnimations() {
+    const navContainer = document.querySelector('.nav-container');
     const revealElements = document.querySelectorAll('.reveal');
-    const windowHeight = window.innerHeight;
-    let scrollTimeout;
     
-    function checkReveal() {
+    const handleScroll = () => {
+        // Update navigation appearance
+        if (window.scrollY > 50) {
+            navContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+            navContainer.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)';
+        } else {
+            navContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+            navContainer.style.boxShadow = 'none';
+        }
+        
+        // Reveal elements on scroll
         revealElements.forEach(element => {
             const elementTop = element.getBoundingClientRect().top;
-            const elementVisible = 150;
+            const windowHeight = window.innerHeight;
             
-            if (elementTop < windowHeight - elementVisible) {
+            if (elementTop < windowHeight - 100) {
                 element.classList.add('active');
             }
         });
-    }
+    };
     
-    // Initial check
-    checkReveal();
-    
-    // Throttled scroll handler
-    window.addEventListener('scroll', () => {
-        if (!scrollTimeout) {
-            scrollTimeout = setTimeout(() => {
-                checkReveal();
-                scrollTimeout = null;
-            }, 100);
-        }
-    });
+    // Initial check and scroll event listener
+    handleScroll();
+    window.addEventListener('scroll', handleScroll);
 }
 
-// Navbar transformation on scroll
-function initNavbarTransform() {
-    const navbar = document.querySelector('.nav-container');
-    let lastScroll = 0;
-    let ticking = false;
-    
-    function updateNavbar(scrollPos) {
-        // Add scrolled class when scrolling down
-        if (scrollPos > 5) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-        
-        // Hide/show navbar based on scroll direction
-        if (scrollPos > lastScroll && scrollPos > 300) {
-            navbar.style.transform = 'translateY(-100%)';
-        } else {
-            navbar.style.transform = 'translateY(0)';
-        }
-        
-        lastScroll = scrollPos;
-        ticking = false;
-    }
-    
-    window.addEventListener('scroll', () => {
-        const scrollPos = window.scrollY;
-        if (!ticking) {
-            window.requestAnimationFrame(() => {
-                updateNavbar(scrollPos);
-            });
-            ticking = true;
-        }
-    });
-}
-
-// Smooth scroll for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        const targetElement = document.querySelector(targetId);
-        
-        if (targetElement) {
-            const navbarHeight = document.querySelector('.nav-container').offsetHeight;
-            const targetPosition = targetElement.offsetTop - navbarHeight;
+// Smooth scroll for navigation
+function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
             
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-        }
+            if (targetElement) {
+                const navHeight = document.querySelector('.nav-container').offsetHeight;
+                const targetPosition = targetElement.offsetTop - navHeight - 20;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
     });
-});
+}
 
 // Dynamic date display
 const currentYear = new Date().getFullYear();
